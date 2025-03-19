@@ -3,6 +3,8 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import { Toaster } from "@/components/ui/toaster";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 const lora = Manrope({ subsets: ["latin"] });
 
@@ -22,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={lora.className}>
-        {" "}
-        <Navbar />
-        {children}
-        <Footer />
+        <ReactQueryProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ReactQueryProvider>
+        <Toaster />
       </body>
     </html>
   );

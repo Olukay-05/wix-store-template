@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { delay } from "@/lib/utils";
 import { getWixClient } from "@/lib/wix-client.base";
+import { getWixServerClient } from "@/lib/wix-client.server";
+import { getCollectionBySlug } from "@/wix-api/collections";
+import { queryProducts } from "@/wix-api/products";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,23 +49,16 @@ export default function Home() {
 async function FeaturedProducts() {
   await delay(1000);
 
-  const wixClient = getWixClient();
-
-  const collections = await wixClient.collections.queryCollections().find();
-  console.log(collections);
-
-  const { collection } =
-    await wixClient.collections.getCollectionBySlug("featured-products");
+  const wixClient = getWixServerClient();
+  const collection = await getCollectionBySlug(wixClient, "featured-products");
 
   if (!collection?._id) {
     return null;
   }
 
-  const featuredProducts = await wixClient.products
-    .queryProducts()
-    .hasSome("collectionIds", [collection._id])
-    .descending("lastUpdated")
-    .find();
+  const featuredProducts = await queryProducts(wixClient, {
+    collectionIds: collection._id,
+  });
 
   if (!featuredProducts.items.length) {
     return null;
@@ -76,7 +72,7 @@ async function FeaturedProducts() {
           <Product key={product._id} product={product} />
         ))}
       </div>
-      {/* <pre>{JSON.stringify(featuredProducts, null, 2)}</pre> */}
+      <pre>{JSON.stringify(featuredProducts, null, 2)}</pre>
     </div>
   );
 }
