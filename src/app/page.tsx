@@ -47,7 +47,7 @@ export default function Home() {
 }
 
 async function FeaturedProducts() {
-  await delay(1000);
+  // await delay(1000);
 
   const wixClient = getWixServerClient();
   const collection = await getCollectionBySlug(wixClient, "featured-products");
@@ -72,7 +72,7 @@ async function FeaturedProducts() {
           <Product key={product._id} product={product} />
         ))}
       </div>
-      <pre>{JSON.stringify(featuredProducts, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(featuredProducts, null, 2)}</pre> */}
     </div>
   );
 }
